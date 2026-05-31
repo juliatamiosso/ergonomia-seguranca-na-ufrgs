@@ -1,0 +1,33 @@
+(function($) {
+    let UFRGS_Site = {
+        matriculaBtnTemplate: `
+            <a href="https://www1.ufrgs.br/sistemas/portal/login?Destino=portal-matricula" class="btn-default red" target="_blank">Acessar</a>
+        `,
+
+        matriculaIsOpenInterval: null,
+
+        checkIfMatriculaIsOpen: function() {
+            $.ajax({
+                url: config.ajax_url,
+                type: "GET",
+                returnType: "json",
+                data: {
+                    action: "handle_check_matricula_status"
+                },
+                success: function(response) {
+                    if(response.data.status.Ativo == "true") {
+                        $('#matriculaBtnRed').append(UFRGS_Site.matriculaBtnTemplate);
+                    }
+                },
+            })
+        },
+
+        startIfMatriculaIsOpen: function() {
+            this.matriculaIsOpenInterval = setInterval(function() {
+                UFRGS_Site.checkIfMatriculaIsOpen();
+            }, 50000);
+        }
+    }
+
+    window.UFRGS_Site = UFRGS_Site;
+})(jQuery);
